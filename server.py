@@ -1,5 +1,6 @@
 #sudo pip instal flask,pymongo
 import json
+import flask
 from flask import Flask
 from pymongo import MongoClient
 from library import getCollection,helloWorld
@@ -20,15 +21,11 @@ def getTweet():
     if json:
         tweet = {
             "id" : json['id'],
-            "text" : unicode(json['text']),
+            "text" : json['text'].encode('utf-8'),
             "collection" : "Adonis"
             }
-    #dat = tweet.json()
     print tweet
-    #print dat
-    #return flask.jsonify(**dat)
-    tw = json.dumps(tweet)
-    return tw
+    return flask.jsonify(**tweet)
 
 @app.route('/deleteTweet/<id>')
 def deleteTweet(id):
@@ -39,8 +36,18 @@ def deleteTweet(id):
         print '<$>yeah i found it !'
         collection.remove({"id" : float(id)})
     else:
-        print '<$>already deleted !'
+        print '<$>doesnt exist anymore!'
     return '', 200
+
+@app.route('/decideTweet/<id>&<sign>')
+def decideTweet(id,sign):
+    collection = getCollection('Adonis')
+    json = collection.find_one_and_update( { 'id': float(id)}, { '$set': {'checked' : True}} )
+    if json:
+        # if the object still exists (in case simultaneously somebody deleted it)
+        collection = getCollection('Results')
+        result = collection.insert({'id' : json['id'], 'text' : json['text'], 'sign' : sign})
+    return '',200
 
 
 
