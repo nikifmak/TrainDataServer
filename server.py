@@ -12,9 +12,9 @@ def hello():
     return helloWorld()
 
 
-@app.route('/getTweet/')
-def getTweet():
-    collection = getCollection('Adonis')
+@app.route('/getTweet/<col>')
+def getTweet(col):
+    collection = getCollection(col)
     json = collection.find_one( { 'checked' : {'$exists' : False } })
     #result = collection.update( { 'checked' : {'$exists' : False } }, { '$set' : {'checked' : True}})
     tweet = {}
@@ -22,7 +22,7 @@ def getTweet():
         tweet = {
             "id" : json['id'],
             "text" : json['text'].encode('utf-8'),
-            "collection" : "Adonis"
+            "collection" : col
             }
     print tweet
     return flask.jsonify(**tweet)
