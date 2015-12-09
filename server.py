@@ -32,11 +32,7 @@ def deleteTweet(id,col):
 
     collection = getCollection(col)
     idv = float(id)
-    print 'ehreherrehrh'
-    print idv
-    print type(idv)
     json = collection.find_one({"id" : idv})
-    print json
     if json:
         print '<$>yeah i found it !'
         collection.remove({"id" : idv})
@@ -47,9 +43,12 @@ def deleteTweet(id,col):
 @app.route('/decideTweet/<id>&<sign>')
 def decideTweet(id,sign):
     collection = getCollection('Adonis')
-    json = collection.find_one_and_update( { 'id': float(id)}, { '$set': {'checked' : True}} )
+    idv = float(id)
+    json = collection.find_one_and_update( { 'id': idv}, { '$set': {'checked' : True}} )
+    print 'flag123'
     if json:
         # if the object still exists (in case simultaneously somebody deleted it)
+        print 'flag'
         collection = getCollection('Results')
         result = collection.insert({'id' : json['id'], 'text' : json['text'], 'sign' : sign})
     return '',200
