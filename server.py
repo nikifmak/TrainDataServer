@@ -16,11 +16,11 @@ def hello():
 def getTweet(col):
     collection = getCollection(col)
     json = collection.find_one( { 'checked' : {'$exists' : False } })
-    
+
     tweet = {}
     if json:
         tweet = {
-            "id" : json['id'],
+            "id" : repr(json['id']),
             "text" : json['text'].encode('utf-8'),
             "collection" : col
             }
@@ -34,6 +34,7 @@ def deleteTweet(id,col):
     idv = float(id)
     print 'ehreherrehrh'
     print idv
+    print type(idv)
     json = collection.find_one({"id" : idv})
     print json
     if json:
