@@ -1,3 +1,4 @@
+#final
 #sudo pip instal flask,pymongo
 import json
 import flask
@@ -40,9 +41,9 @@ def deleteTweet(id,col):
         print '<$>doesnt exist anymore!'
     return '', 200
 
-@app.route('/decideTweet/<id>&<sign>')
-def decideTweet(id,sign):
-    collection = getCollection('Adonis')
+@app.route('/decideTweet/<id>&<col>&<sign>')
+def decideTweet(id,col,sign):
+    collection = getCollection(col)
     idv = float(id)
     json = collection.find_one_and_update( { 'id': idv}, { '$set': {'checked' : True}} )
     print 'flag123'
