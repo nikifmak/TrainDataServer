@@ -16,7 +16,7 @@ def hello():
 def getTweet(col):
     collection = getCollection(col)
     json = collection.find_one( { 'checked' : {'$exists' : False } })
-    #result = collection.update( { 'checked' : {'$exists' : False } }, { '$set' : {'checked' : True}})
+    
     tweet = {}
     if json:
         tweet = {
@@ -24,17 +24,21 @@ def getTweet(col):
             "text" : json['text'].encode('utf-8'),
             "collection" : col
             }
-    print tweet
+    print tweet['id']
     return flask.jsonify(**tweet)
 
-@app.route('/deleteTweet/<id>')
-def deleteTweet(id):
-    #?? na prosthesw na pairnei kai to collection pou theloume
-    collection = getCollection('Adonis')
-    json = collection.find_one({"id" : float(id)})
+@app.route('/deleteTweet/<id>&<col>')
+def deleteTweet(id,col):
+
+    collection = getCollection(col)
+    idv = float(id)
+    print 'ehreherrehrh'
+    print idv
+    json = collection.find_one({"id" : idv})
+    print json
     if json:
         print '<$>yeah i found it !'
-        collection.remove({"id" : float(id)})
+        collection.remove({"id" : idv})
     else:
         print '<$>doesnt exist anymore!'
     return '', 200
