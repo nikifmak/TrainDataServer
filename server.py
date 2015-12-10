@@ -34,9 +34,12 @@ def deleteTweet(id,col):
     collection = getCollection(col)
     idv = float(id)
     json = collection.find_one({"id" : idv})
+    tweetList = collection.find({'text' : json['text']})
+    for doc in tweetList:
+        print doc['id']
     if json:
         print '<$>yeah i found it !'
-        collection.remove({"id" : idv})
+        collection.remove({'text' : json['text']})
     else:
         print '<$>doesnt exist anymore!'
     return '', 200
@@ -46,12 +49,12 @@ def decideTweet(id,col,sign):
     collection = getCollection(col)
     idv = float(id)
     json = collection.find_one_and_update( { 'id': idv}, { '$set': {'checked' : True}} )
-    print 'flag123'
-    if json:
-        # if the object still exists (in case simultaneously somebody deleted it)
-        print 'flag'
-        collection = getCollection('Results')
-        result = collection.insert({'id' : json['id'], 'text' : json['text'], 'sign' : sign})
+    updateResult = collection.update({'text' : json['text']}, { '$set': {'checked' : True}})
+    tweetList = collection.find({'text' : json['text']})
+    collection = getCollection('Results')
+    for doc in tweetList:
+        print 'flag123'
+        result = collection.insert({'id' : doc['id'], 'text' : doc['text'], 'sign' : sign, 'collection' : col})
     return '',200
 
 
